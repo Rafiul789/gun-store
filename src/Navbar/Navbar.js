@@ -5,7 +5,7 @@ import './Navbar.css';
 const Navbar = () => {
   return (
     <div className="navbar">
-      <h1>This is navbar</h1>
+     <h1> Gun Store</h1>
     </div>
   );
 };
