@@ -2,10 +2,39 @@ import './App.css';
 import React,{useState,useEffect} from 'react';
 import Navbar from './Navbar/Navbar';
 import Card from './Card/Card';
-
+import Modal from "react-modal";
+import { CgCloseR } from "react-icons/cg";
+Modal.setAppElement("#root");
 const App = () => {
   const [guns,setGuns]=useState([]);
- 
+  const[cart,setCart]=useState([]);
+  const [modal, setModal] = useState(false)
+  const handleAddToCart = (gun) => {
+    const newCart = [...cart, gun];
+    setCart(newCart);
+  };
+
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      height: "500px",
+      width: "600px",
+      overflow: "auto",
+    },
+  };
+  const toggleModal = () => {
+    setModal(true);
+  };
+
+  const closeModal = () => {
+    setModal(false);
+  };
+
   useEffect(()=>{
 
 fetch('data.json')
@@ -16,11 +45,23 @@ fetch('data.json')
   return (
     <div>
       
-      <Navbar></Navbar>
-      <div className="gun-container"> {
-        guns.map(gun=><Card key={gun.id}  gunData={gun} > </Card>)
+      <Navbar  cart={cart} toggleModal={toggleModal} ></Navbar>
+      <div className="card-container"> {
+        guns.map(gun=><Card key={gun.id}  gunData={gun} handleAddToCart={handleAddToCart} > </Card>)
       }  </div>
-     
+       <Modal isOpen={modal} onRequestClose={closeModal} style={customStyles}>
+        <button className='modal-close-button' onClick={closeModal}>
+          <CgCloseR size={25} />
+        </button>
+        {cart.length === 0 && (
+          <div className='cart-warning'>
+            <p> Cart is empty </p>
+          </div>
+        )}
+        {cart.map((item) => (
+          <h1>Name: {item.name}</h1>
+        ))}
+      </Modal>
      
     </div>
   );
